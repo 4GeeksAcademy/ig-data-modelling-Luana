@@ -10,37 +10,38 @@ from enum import Enum as PyEnum
 Base = declarative_base()
 
 class User(Base):
-    __tablename__ = 'User'
+    __tablename__ = 'user'
    
     id = Column(Integer, primary_key=True)
     username = Column(String(250), nullable=False)
     firstname = Column(String(250), nullable=False)
     lastname = Column(String(250), nullable=False)
     email = Column(String(250), unique=True)
+    
 
 class Follower(Base):
-    __tablename__ = 'Follower'
+    __tablename__ = 'follower'
    
     id = Column(Integer, primary_key=True)
-    user_from_id = Column(Integer , ForeignKey('user.id'))
-    user_to_id = Column(Integer , ForeignKey('user.id'))
+    user_from_id = Column(Integer, ForeignKey('user.id'))
+    user_to_id = Column(Integer, ForeignKey('user.id'))
     
 
 class Comment(Base):
-    __tablename__ = 'Comment'
+    __tablename__ = 'comment'
     
     id = Column(Integer, primary_key=True)
     comment_text = Column(String (800))
-    author_id = (Integer , ForeignKey('user.id'))
-    post_id = (Integer , ForeignKey('user.id'))
-    autor = relationship(User)
+    author_id = (Integer, ForeignKey('user.id'))
+    post_id = (Integer, ForeignKey('post.id'))
+    # autor = relationship(User)
 
 
 class Post(Base):
-    __tablename__ = 'Post'
+    __tablename__ = 'post'
     
     id = Column(Integer, primary_key=True)
-    user_id = (Integer , ForeignKey('user.id'))
+    user_id = (Integer, ForeignKey('user.id'))
     autor = relationship(User)
 
 
@@ -52,12 +53,13 @@ class MediaType (PyEnum):
 
 
 class Media(Base):
-    __tablename__ = 'Media'
+    __tablename__ = 'media'
     
     id = Column(Integer, primary_key=True)
     type = Column(Enum(MediaType))
     url = Column (String(200))
-    post_id = (Integer , ForeignKey('user.id'))
+    post_id = (Integer, ForeignKey('user.id'))
+    
 
     
 

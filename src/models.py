@@ -1,6 +1,6 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String, Enum 
+from sqlalchemy import Column, ForeignKey, Integer, String, Enum
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy import create_engine
 from eralchemy2 import render_er
@@ -11,7 +11,6 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'user'
-   
     id = Column(Integer, primary_key=True)
     username = Column(String(250), nullable=False)
     firstname = Column(String(250), nullable=False)
@@ -21,32 +20,28 @@ class User(Base):
 
 class Follower(Base):
     __tablename__ = 'follower'
-   
     id = Column(Integer, primary_key=True)
     user_from_id = Column(Integer, ForeignKey('user.id'))
     user_to_id = Column(Integer, ForeignKey('user.id'))
     
 
 class Comment(Base):
-    __tablename__ = 'comment'
-    
+    __tablename__ = 'comment'    
     id = Column(Integer, primary_key=True)
-    comment_text = Column(String (800))
-    author_id = (Integer, ForeignKey('user.id'))
-    post_id = (Integer, ForeignKey('post.id'))
-    # autor = relationship(User)
+    comment_text = Column(String(800))
+    author_id = Column(Integer, ForeignKey('user.id'))
+    post_id = Column(Integer, ForeignKey('post.id'))
+    author = relationship("User", back_populates="comments")
 
 
 class Post(Base):
     __tablename__ = 'post'
-    
     id = Column(Integer, primary_key=True)
-    user_id = (Integer, ForeignKey('user.id'))
-    autor = relationship(User)
-
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship("User", back_populates="posts")
+    comments = relationship("Comment", back_populates="post")
 
 class MediaType (PyEnum):
-
     REEL = "reel"
     PICTURE = "picture" 
     STORY = "story"
@@ -54,13 +49,11 @@ class MediaType (PyEnum):
 
 class Media(Base):
     __tablename__ = 'media'
-    
     id = Column(Integer, primary_key=True)
     type = Column(Enum(MediaType))
     url = Column (String(200))
-    post_id = (Integer, ForeignKey('user.id'))
-    
-
+    post_id = Column(Integer, ForeignKey('post.id'))
+    post = relationship("Post")
     
 
 try:
